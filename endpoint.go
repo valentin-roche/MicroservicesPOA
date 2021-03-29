@@ -59,7 +59,7 @@ func MakeGetByIDEndpoint(s BlogPostService) endpoint.Endpoint {
 }
 
 type GetByTitleRequest struct {
-	Title string
+	Query string
 }
 
 type GetByTitleResponse struct {
@@ -69,7 +69,7 @@ type GetByTitleResponse struct {
 func MakeGetByTitleEndpoint(s BlogPostService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(GetByTitleRequest)
-		blogposts, err := s.GetByTitle(ctx, req.Title)
+		blogposts, err := s.GetByTitle(ctx, req.Query)
 		return GetByTitleResponse{blogposts}, err
 	}
 }
