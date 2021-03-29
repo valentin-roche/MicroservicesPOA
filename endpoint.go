@@ -21,7 +21,7 @@ func MakeBlogPostEndpoints(s BlogPostService) BlogPostEndpoints {
 		GetAllPostsEndpoint: MakeGetAllPostsEndpoints(s),
 		GetByIDEndpoint:     MakeGetByIDEndpoint(s),
 		GetByTitleEndpoint:  MakeGetByTitleEndpoint(s),
-		GetByAuthorEndpoint: GetByAuthorEndpoint(s),
+		GetByAuthorEndpoint: MakeGetByAuthorEndpoint(s),
 		AddEndpoint:         MakeAddEndpoint(s),
 		UpdateEndpoint:      MakeUpdateEndpoint(s),
 		DeleteEndpoint:      MakeDeleteEndpoint(s),
@@ -55,5 +55,84 @@ func MakeGetByIDEndpoint(s BlogPostService) endpoint.Endpoint {
 		req := request.(GetByIDRequest)
 		blogpost, err := s.GetByID(ctx, req.ID)
 		return GetByIDResponse{blogpost}, err
+	}
+}
+
+type GetByTitleRequest struct {
+	Title string
+}
+
+type GetByTitleResponse struct {
+	BlogPosts []BlogPost `json:"blogposts"`
+}
+
+func MakeGetByTitleEndpoint(s BlogPostService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(GetByTitleRequest)
+		blogposts, err := s.GetByTitle(ctx, req.Title)
+		return GetByTitleResponse{blogposts}, err
+	}
+}
+
+type GetByAuthorRequest struct {
+	Author string
+}
+
+type GetByAuthorResponse struct {
+	BlogPosts []BlogPost `json:"blogposts"`
+}
+
+func MakeGetByAuthorEndpoint(s BlogPostService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(GetByAuthorRequest)
+		blogpost, err := s.GetByAuthor(ctx, req.Author)
+		return GetByAuthorResponse{blogpost}, err
+	}
+}
+
+type AddRequest struct {
+	BlogPost BlogPost
+}
+
+type AddResponse struct {
+	BlogPost BlogPost `json:"blogpost"`
+}
+
+func MakeAddEndpoint(s BlogPostService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(AddRequest)
+		blogpost, err := s.Add(ctx, req.BlogPost)
+		return AddResponse{blogpost}, err
+	}
+}
+
+type UpdateRequest struct {
+	ID       int
+	BlogPost BlogPost
+}
+
+type UpdateResponse struct {
+}
+
+func MakeUpdateEndpoint(s BlogPostService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(UpdateRequest)
+		err := s.Update(ctx, req.ID, req.BlogPost)
+		return UpdateResponse{}, err
+	}
+}
+
+type DeleteRequest struct {
+	ID int
+}
+
+type DeleteResponse struct {
+}
+
+func MakeDeleteEndpoint(s BlogPostService) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(DeleteRequest)
+		err := s.Delete(ctx, req.ID)
+		return DeleteResponse{}, err
 	}
 }
