@@ -91,7 +91,7 @@ func MakeGetByAuthorEndpoint(s BlogPostService) endpoint.Endpoint {
 }
 
 type AddRequest struct {
-	BlogPost BlogPost
+	blogPost BlogPost
 }
 
 type AddResponse struct {
@@ -101,7 +101,7 @@ type AddResponse struct {
 func MakeAddEndpoint(s BlogPostService) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(AddRequest)
-		blogpost, err := s.Add(ctx, req.BlogPost)
+		blogpost, err := s.Add(ctx, req.blogPost)
 		return AddResponse{blogpost}, err
 	}
 }

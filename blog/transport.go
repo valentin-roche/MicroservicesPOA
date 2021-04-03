@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 
@@ -70,7 +71,7 @@ func MakeHTTPHandler(s BlogPostService, logger log.Logger) http.Handler {
 		options...,
 	))
 
-	r.Methods("PUT").Path("/posts/{id}").Handler(httptransport.NewServer(
+	r.Methods("PUT").Path("/posts/update/{id}").Handler(httptransport.NewServer(
 		e.UpdateEndpoint,
 		decodeUpdateRequest,
 		encodeResponse,
@@ -93,11 +94,16 @@ func decodeGetAllPostsRequest(_ context.Context, r *http.Request) (request inter
 }
 
 func decodeGetByIDRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
-	var req GetByIDRequest
-	if e := json.NewDecoder(r.Body).Decode(&req.ID); e != nil {
-		return nil, e
+	vars := mux.Vars(r)
+	idparam, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
 	}
-	return req, nil
+	id, err := strconv.Atoi(idparam)
+	if err != nil {
+		return nil, ErrBadRouting
+	}
+	return GetByIDRequest{ID: id}, nil
 }
 
 func decodeGetByTitleRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
@@ -111,7 +117,7 @@ func decodeGetByTitleRequest(_ context.Context, r *http.Request) (request interf
 
 func decodeAddRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
 	var req AddRequest
-	if e := json.NewDecoder(r.Body).Decode(&req.BlogPost); e != nil {
+	if e := json.NewDecoder(r.Body).Decode(&req.blogPost); e != nil {
 		return nil, e
 	}
 	return req, nil
@@ -129,24 +135,37 @@ func decodeGetByAuthorRequest(_ context.Context, r *http.Request) (request inter
 func decodeUpdateRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
 	var req UpdateRequest
 	ePost := json.NewDecoder(r.Body).Decode(&req.BlogPost)
-	eID := json.NewDecoder(r.Body).Decode(&req.ID)
-
-	if eID != nil {
-		return nil, eID
+	vars := mux.Vars(r)
+	idparam, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
 	}
+
+	id, err := strconv.Atoi(idparam)
+	if err != nil {
+		return nil, ErrBadRouting
+	}
+
 	if ePost != nil {
 		return nil, ePost
 	}
+
+	req.ID = id
 
 	return req, nil
 }
 
 func decodeDeleteRequest(_ context.Context, r *http.Request) (request interface{}, err error) {
-	var req DeleteRequest
-	if e := json.NewDecoder(r.Body).Decode(&req.ID); e != nil {
-		return nil, e
+	vars := mux.Vars(r)
+	idparam, ok := vars["id"]
+	if !ok {
+		return nil, ErrBadRouting
 	}
-	return req, nil
+	id, err := strconv.Atoi(idparam)
+	if err != nil {
+		return nil, ErrBadRouting
+	}
+	return DeleteRequest{ID: id}, nil
 }
 
 type errorer interface {
@@ -154,6 +173,7 @@ type errorer interface {
 }
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if e, ok := response.(errorer); ok && e.error() != nil {
 		// Not a Go kit transport error, but a business-logic error.
 		// Provide those as HTTP errors.
@@ -165,6 +185,7 @@ func encodeResponse(ctx context.Context, w http.ResponseWriter, response interfa
 }
 
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if err == nil {
 		panic("encodeError with nil error")
 	}

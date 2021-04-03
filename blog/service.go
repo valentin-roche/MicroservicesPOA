@@ -32,6 +32,15 @@ func NewInmemBlogPostService() BlogPostService {
 		nextID:    0,
 	}
 	rand.Seed(time.Now().UnixNano())
+
+	s.blogPosts[1234] = BlogPost{
+		ID:          1234,
+		Title:       "Test",
+		Author:      "Valentin ROCHE",
+		Content:     "Ca marche",
+		PublishedOn: time.Now(),
+	}
+
 	return s
 }
 

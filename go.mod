@@ -1,4 +1,4 @@
-module microservices
+module github.com/valentin-roche/MicroservicesPOA
 
 go 1.16
 
