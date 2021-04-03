@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "9cd0df92-a452-4ef3-97d5-002db4f242ba",
+		"name": "Blog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Liste",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/posts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":12345,\r\n    \"title\":\"Test\",\r\n    \"author\":\"Valentin ROCHE\",\r\n    \"content\":\"L'ajout fonctionne\",\r\n    \"published_on\":\"2021-03-29T18:53:58.9592333-04:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/posts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":1234,\r\n    \"title\":\"Test\",\r\n    \"author\":\"Valentin ROCHE\",\r\n    \"content\":\"L'update fonctionne\",\r\n    \"published_on\":\"2021-03-29T18:53:58.9592333-04:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/posts/update/1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						"update",
+						"1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/posts/1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						"1234"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get auteur",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/posts/?author=Valentin ROCHE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						""
+					],
+					"query": [
+						{
+							"key": "author",
+							"value": "Valentin ROCHE"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Requete titre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/posts/?query=Te",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						""
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "Te"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/posts/1234",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"posts",
+						"1234"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
